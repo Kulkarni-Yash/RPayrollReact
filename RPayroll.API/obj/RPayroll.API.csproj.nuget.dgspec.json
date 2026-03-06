@@ -1,0 +1,196 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/Yash/Dev/RPayrollReact/RPayroll.API/RPayroll.API.csproj": {}
+  },
+  "projects": {
+    "/Users/Yash/Dev/RPayrollReact/RPayroll.API/RPayroll.API.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/Yash/Dev/RPayrollReact/RPayroll.API/RPayroll.API.csproj",
+        "projectName": "RPayroll.API",
+        "projectPath": "/Users/Yash/Dev/RPayrollReact/RPayroll.API/RPayroll.API.csproj",
+        "packagesPath": "/Users/Yash/.nuget/packages/",
+        "outputPath": "/Users/Yash/Dev/RPayrollReact/RPayroll.API/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/Yash/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/Yash/Dev/RPayrollReact/RPayroll.Domain/RPayroll.Domain.csproj": {
+                "projectPath": "/Users/Yash/Dev/RPayrollReact/RPayroll.Domain/RPayroll.Domain.csproj"
+              },
+              "/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/RPayroll.Infrastructure.csproj": {
+                "projectPath": "/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/RPayroll.Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.417/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/Yash/Dev/RPayrollReact/RPayroll.Domain/RPayroll.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/Yash/Dev/RPayrollReact/RPayroll.Domain/RPayroll.Domain.csproj",
+        "projectName": "RPayroll.Domain",
+        "projectPath": "/Users/Yash/Dev/RPayrollReact/RPayroll.Domain/RPayroll.Domain.csproj",
+        "packagesPath": "/Users/Yash/.nuget/packages/",
+        "outputPath": "/Users/Yash/Dev/RPayrollReact/RPayroll.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/Yash/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.417/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/RPayroll.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/RPayroll.Infrastructure.csproj",
+        "projectName": "RPayroll.Infrastructure",
+        "projectPath": "/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/RPayroll.Infrastructure.csproj",
+        "packagesPath": "/Users/Yash/.nuget/packages/",
+        "outputPath": "/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/Yash/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/Yash/Dev/RPayrollReact/RPayroll.Domain/RPayroll.Domain.csproj": {
+                "projectPath": "/Users/Yash/Dev/RPayrollReact/RPayroll.Domain/RPayroll.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.417/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

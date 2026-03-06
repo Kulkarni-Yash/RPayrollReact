@@ -1,0 +1,15 @@
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/bin/Debug/net8.0/RPayroll.Infrastructure.deps.json
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/bin/Debug/net8.0/RPayroll.Infrastructure.dll
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/bin/Debug/net8.0/RPayroll.Infrastructure.pdb
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/bin/Debug/net8.0/RPayroll.Domain.dll
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/bin/Debug/net8.0/RPayroll.Domain.pdb
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/Debug/net8.0/RPayroll.Infrastructure.csproj.AssemblyReference.cache
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/Debug/net8.0/RPayroll.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/Debug/net8.0/RPayroll.Infrastructure.AssemblyInfoInputs.cache
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/Debug/net8.0/RPayroll.Infrastructure.AssemblyInfo.cs
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/Debug/net8.0/RPayroll.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/Debug/net8.0/RPayroll.36217E46.Up2Date
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/Debug/net8.0/RPayroll.Infrastructure.dll
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/Debug/net8.0/refint/RPayroll.Infrastructure.dll
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/Debug/net8.0/RPayroll.Infrastructure.pdb
+/Users/Yash/Dev/RPayrollReact/RPayroll.Infrastructure/obj/Debug/net8.0/ref/RPayroll.Infrastructure.dll
