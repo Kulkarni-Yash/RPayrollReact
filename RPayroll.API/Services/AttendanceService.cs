@@ -74,13 +74,39 @@ public class AttendanceService : IAttendanceService
     public async Task<AttendanceDto?> UpdateAttendanceAsync(UpdateAttendanceDto dto)
     {
         EnsureAuthenticated();
-        EnsureAdminOrHr();
         ValidateTimes(dto.CheckInTime, dto.CheckOutTime);
 
         var attendance = await _unitOfWork.Attendances.GetByIdAsync(dto.AttendanceId);
         if (attendance == null)
         {
             return null;
+        }
+
+        if (IsEmployee())
+        {
+            if (!_currentUser.EmployeeId.HasValue)
+            {
+                throw new UnauthorizedAccessException("Employee id not found.");
+            }
+
+            var employeeId = _currentUser.EmployeeId.Value;
+            if (attendance.EmployeeId != employeeId)
+            {
+                throw new UnauthorizedAccessException("Not allowed to update attendance.");
+            }
+
+            var today = DateTime.Today;
+            if (attendance.Date.Date != today)
+            {
+                throw new InvalidOperationException("Employees can only update today's attendance.");
+            }
+
+            dto.EmployeeId = employeeId;
+            dto.Date = attendance.Date;
+        }
+        else
+        {
+            EnsureAdminOrHr();
         }
 
         attendance.EmployeeId = dto.EmployeeId;

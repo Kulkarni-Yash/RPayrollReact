@@ -15,7 +15,8 @@ public class MenuController : ControllerBase
         var menu = new List<MenuItemDto>
         {
             new() { Key = "dashboard", Label = "Dashboard", Order = 1 },
-            new() { Key = "employee", Label = "Employee", Order = 2 }
+            new() { Key = "employee", Label = "Employee", Order = 2 },
+            new() { Key = "attendance", Label = "Attendance", Order = 3 }
         };
 
         return Ok(menu);

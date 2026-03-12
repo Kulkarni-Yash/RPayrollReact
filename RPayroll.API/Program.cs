@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using RPayroll.API.Security;
 using RPayroll.API.Services;
 using RPayroll.Domain.Interfaces.Services;
@@ -18,7 +19,7 @@ builder.Services.AddCors(options =>
             .WithOrigins(
                 "http://localhost:5173",
                 "http://127.0.0.1:5173",
-                "https://f081-122-170-110-74.ngrok-free.app"
+                "https://9dd9-122-170-110-74.ngrok-free.app"
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
@@ -52,6 +53,24 @@ builder.Services.AddAuthentication("Fake")
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (InvalidOperationException ex)
+    {
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+    }
+    catch (UnauthorizedAccessException ex)
+    {
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+    }
+});
 
 if (!app.Environment.IsDevelopment())
 {
