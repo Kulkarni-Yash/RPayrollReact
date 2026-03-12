@@ -29,6 +29,8 @@ export default function ProfilePage({ token }: ProfilePageProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [contacts, setContacts] = useState<ContactPerson[]>([])
+  const [deletedContactIds, setDeletedContactIds] = useState<number[]>([])
   const [notification, setNotification] = useState<{
     message: string
     type: 'success' | 'error'
@@ -36,6 +38,7 @@ export default function ProfilePage({ token }: ProfilePageProps) {
   } | null>(null)
   const hideTimerRef = useRef<number | null>(null)
   const clearTimerRef = useRef<number | null>(null)
+  const originalContactsRef = useRef<ContactPerson[]>([])
 
   const showNotification = (message: string, type: 'success' | 'error') => {
     if (hideTimerRef.current) {
@@ -94,6 +97,9 @@ export default function ProfilePage({ token }: ProfilePageProps) {
         address: data.address ?? '',
         contactPersons,
       })
+      setContacts(contactPersons)
+      originalContactsRef.current = contactPersons
+      setDeletedContactIds([])
     } catch {
       setError('Failed to load profile')
     } finally {
@@ -139,7 +145,95 @@ export default function ProfilePage({ token }: ProfilePageProps) {
         return
       }
 
+      const originalMap = new Map(
+        originalContactsRef.current.map((contact) => [contact.id, contact])
+      )
+
+      const createContacts = contacts.filter((contact) => contact.id < 0)
+      const updateContacts = contacts.filter(
+        (contact) =>
+          contact.id > 0 &&
+          JSON.stringify(contact) !==
+            JSON.stringify(originalMap.get(contact.id))
+      )
+      const deleteContacts = deletedContactIds.filter((id) => id > 0)
+
+      for (const contact of createContacts) {
+        const createResponse = await apiFetch(
+          `/api/employees/${profile.id}/contacts`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              id: 0,
+              employeeId: profile.id,
+              name: contact.name,
+              relationship: contact.relation,
+              phone: contact.phone,
+              email: contact.email,
+              isPrimary: false,
+            }),
+          }
+        )
+
+        if (!createResponse.ok) {
+          const errorMessage = await readErrorMessage(createResponse)
+          showNotification(errorMessage, 'error')
+          return
+        }
+      }
+
+      for (const contact of updateContacts) {
+        const updateResponse = await apiFetch(
+          `/api/employees/${profile.id}/contacts/${contact.id}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              id: contact.id,
+              employeeId: profile.id,
+              name: contact.name,
+              relationship: contact.relation,
+              phone: contact.phone,
+              email: contact.email,
+              isPrimary: false,
+            }),
+          }
+        )
+
+        if (!updateResponse.ok) {
+          const errorMessage = await readErrorMessage(updateResponse)
+          showNotification(errorMessage, 'error')
+          return
+        }
+      }
+
+      for (const contactId of deleteContacts) {
+        const deleteResponse = await apiFetch(
+          `/api/employees/${profile.id}/contacts/${contactId}`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+
+        if (!deleteResponse.ok) {
+          const errorMessage = await readErrorMessage(deleteResponse)
+          showNotification(errorMessage, 'error')
+          return
+        }
+      }
+
       showNotification('Profile updated successfully', 'success')
+      await loadProfile()
     } catch {
       showNotification('Failed to update profile', 'error')
     } finally {
@@ -147,122 +241,21 @@ export default function ProfilePage({ token }: ProfilePageProps) {
     }
   }
 
-  const addContact = async (contact: ContactPerson) => {
-    if (!profile) return
-    const response = await apiFetch(`/api/employees/${profile.id}/contacts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        id: 0,
-        employeeId: profile.id,
-        name: contact.name,
-        relationship: contact.relation,
-        phone: contact.phone,
-        email: contact.email,
-        isPrimary: false,
-      }),
-    })
-
-    if (!response.ok) {
-      const errorMessage = await readErrorMessage(response)
-      showNotification(errorMessage, 'error')
-      return
-    }
-
-    const saved = await response.json()
-    setProfile((prev) =>
-      prev
-        ? {
-            ...prev,
-            contactPersons: [
-              ...prev.contactPersons,
-              {
-                id: saved.id ?? contact.id,
-                name: saved.name ?? contact.name,
-                relation: saved.relationship ?? contact.relation,
-                phone: saved.phone ?? contact.phone,
-                email: saved.email ?? contact.email,
-              },
-            ],
-          }
-        : prev
-    )
-    showNotification('Contact added', 'success')
+  const addContact = (contact: ContactPerson) => {
+    setContacts((prev) => [...prev, contact])
   }
 
-  const updateContact = async (contact: ContactPerson) => {
-    if (!profile) return
-    const response = await apiFetch(
-      `/api/employees/${profile.id}/contacts/${contact.id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          id: contact.id,
-          employeeId: profile.id,
-          name: contact.name,
-          relationship: contact.relation,
-          phone: contact.phone,
-          email: contact.email,
-          isPrimary: false,
-        }),
-      }
+  const updateContact = (contact: ContactPerson) => {
+    setContacts((prev) =>
+      prev.map((item) => (item.id === contact.id ? contact : item))
     )
-
-    if (!response.ok) {
-      const errorMessage = await readErrorMessage(response)
-      showNotification(errorMessage, 'error')
-      return
-    }
-
-    setProfile((prev) =>
-      prev
-        ? {
-            ...prev,
-            contactPersons: prev.contactPersons.map((item) =>
-              item.id === contact.id ? contact : item
-            ),
-          }
-        : prev
-    )
-    showNotification('Contact updated', 'success')
   }
 
-  const deleteContact = async (contactId: number) => {
-    if (!profile) return
-    const response = await apiFetch(
-      `/api/employees/${profile.id}/contacts/${contactId}`,
-      {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+  const deleteContact = (contactId: number) => {
+    setContacts((prev) => prev.filter((item) => item.id !== contactId))
+    setDeletedContactIds((prev) =>
+      prev.includes(contactId) ? prev : [...prev, contactId]
     )
-
-    if (!response.ok) {
-      const errorMessage = await readErrorMessage(response)
-      showNotification(errorMessage, 'error')
-      return
-    }
-
-    setProfile((prev) =>
-      prev
-        ? {
-            ...prev,
-            contactPersons: prev.contactPersons.filter(
-              (item) => item.id !== contactId
-            ),
-          }
-        : prev
-    )
-    showNotification('Contact deleted', 'success')
   }
 
   if (loading) {
@@ -343,7 +336,7 @@ export default function ProfilePage({ token }: ProfilePageProps) {
       </form>
 
       <ProfileContacts
-        contacts={profile.contactPersons}
+        contacts={contacts}
         onAdd={addContact}
         onUpdate={updateContact}
         onDelete={deleteContact}
@@ -384,7 +377,7 @@ function ProfileContacts({
   const handleSubmit = () => {
     if (!form.name) return
     if (editingId === null) {
-      onAdd({ id: Date.now(), ...form })
+      onAdd({ id: Date.now() * -1, ...form })
     } else {
       onUpdate({ id: editingId, ...form })
     }
