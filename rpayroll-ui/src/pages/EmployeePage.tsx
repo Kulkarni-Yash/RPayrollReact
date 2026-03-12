@@ -886,7 +886,7 @@ function CreateEmployee({
           <div className="form-actions">
             <button
               type="submit"
-              className="primary-btn"
+              className="primary-btn-1"
               disabled={submitting}
             >
               {employee ? "Edit Employee" : "Save Employee"}

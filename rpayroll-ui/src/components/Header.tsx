@@ -12,6 +12,8 @@ type HeaderProps = {
   onNavigate: (page: string) => void
   username: string
   onLogout: () => void
+  onProfile: () => void
+  showProfile: boolean
 }
 
 export default function Header({
@@ -20,8 +22,11 @@ export default function Header({
   onNavigate,
   username,
   onLogout,
+  onProfile,
+  showProfile,
 }: HeaderProps) {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [navOpen, setNavOpen] = useState(false)
 
   return (
     <header className="app-header">
@@ -47,7 +52,12 @@ export default function Header({
         </nav>
       </div>
 
-      <button type="button" className="header-menu-btn" aria-label="Open menu">
+      <button
+        type="button"
+        className="header-menu-btn"
+        aria-label="Open menu"
+        onClick={() => setNavOpen((prev) => !prev)}
+      >
         ☰
       </button>
 
@@ -55,19 +65,48 @@ export default function Header({
         <button
           type="button"
           className="header-user-btn"
-          onClick={() => setMenuOpen((prev) => !prev)}
+          onClick={() => setUserMenuOpen((prev) => !prev)}
         >
           Hi, {username}
         </button>
 
-        {menuOpen && (
+        {userMenuOpen && (
           <div className="header-user-dropdown">
+            {showProfile && (
+              <button
+                type="button"
+                onClick={() => {
+                  onProfile()
+                  setUserMenuOpen(false)
+                }}
+              >
+                My Profile
+              </button>
+            )}
             <button type="button" onClick={onLogout}>
               Log out
             </button>
           </div>
         )}
       </div>
+
+      {navOpen && (
+        <div className="header-mobile-nav">
+          {menuItems.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              className={activePage === item.key ? 'active' : ''}
+              onClick={() => {
+                onNavigate(item.key)
+                setNavOpen(false)
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
     </header>
   )
 }

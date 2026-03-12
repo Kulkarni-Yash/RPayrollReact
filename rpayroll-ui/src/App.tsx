@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, FormEvent } from 'react'
 import HomePage from './components/HomePage'
-import { apiFetch } from './lib/api'
+import { apiFetch, readErrorMessage } from './lib/api'
 import './App.css'
 
 type LoginResponse = {
@@ -82,8 +82,8 @@ function App() {
           showNotification('Invalid login credentials', 'error')
           return
         }
-
-        showNotification('Network error', 'error')
+        const errorMessage = await readErrorMessage(response)
+        showNotification(errorMessage, 'error')
         return
       }
 
@@ -145,6 +145,7 @@ function App() {
         <HomePage
           token={currentUser.token}
           username={currentUser.username}
+          role={currentUser.role}
           onLogout={handleLogout}
         />
       ) : (

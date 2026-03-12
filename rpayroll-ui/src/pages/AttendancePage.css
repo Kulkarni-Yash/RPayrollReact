@@ -1,0 +1,172 @@
+.attendance-page {
+  height: 100%;
+}
+
+.attendance-layout {
+  display: grid;
+  grid-template-columns: clamp(200px, 20vw, 260px) minmax(0, 1fr);
+  gap: 1.5rem;
+  height: 100%;
+}
+
+.attendance-info {
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-right: 1px solid #eceff3;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.time-card {
+  display: grid;
+  gap: 0.75rem;
+  background: #f7f9fc;
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+
+.attendance-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100%;
+}
+
+.calendar-card,
+.mark-card {
+  height: 100%;
+  padding: 1.5rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.calendar-day {
+  border-radius: 8px;
+  padding: 0.6rem;
+  text-align: center;
+  background: #f5f7fb;
+  font-size: 0.85rem;
+}
+
+.calendar-day.header {
+  background: transparent;
+  font-weight: 600;
+}
+
+.calendar-day.empty {
+  background: transparent;
+}
+
+.status-present {
+  background: #d1f7dc;
+  color: #0b6b2e;
+}
+
+.status-halfday {
+  background: #d7e7ff;
+  color: #1d4ed8;
+}
+
+.status-leave {
+  background: #fde0e0;
+  color: #b42318;
+}
+
+.mark-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 100%;
+}
+
+.mark-btn {
+  border: none;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+}
+
+.mark-btn.inactive {
+  background: #b42318;
+}
+
+.mark-btn.active {
+  background: #0f8b36;
+}
+
+.power-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.attendance-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: grid;
+  place-items: center;
+  z-index: 300;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: min(90%, 380px);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.attendance-loading {
+  text-align: center;
+  color: #6b7280;
+}
+
+@media (max-width: 900px) {
+  .attendance-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mark-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mark-btn {
+    width: 100%;
+  }
+}

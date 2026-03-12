@@ -13,5 +13,30 @@ export async function apiFetch(
   const normalizedPath = path.startsWith('/') ? path : `/${path}`
   const url = `${API_BASE_URL}${normalizedPath}`
 
-  return fetch(url, options)
+  const headers = new Headers(options.headers || {})
+  if (API_BASE_URL.includes('ngrok-free')) {
+    headers.set('ngrok-skip-browser-warning', 'true')
+  }
+
+  return fetch(url, { ...options, headers })
+}
+
+export async function readErrorMessage(response: Response): Promise<string> {
+  try {
+    const data = await response.json()
+    if (data && typeof data === 'object') {
+      if ('message' in data && typeof data.message === 'string') {
+        return data.message
+      }
+      return JSON.stringify(data)
+    }
+  } catch {
+    // ignore JSON parsing errors
+  }
+  try {
+    const text = await response.text()
+    return text || `Request failed (${response.status})`
+  } catch {
+    return `Request failed (${response.status})`
+  }
 }

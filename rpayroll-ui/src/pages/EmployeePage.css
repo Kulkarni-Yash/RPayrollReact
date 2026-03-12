@@ -161,6 +161,7 @@
 .add-btn {
   background: #e8f5e9;
   border: 1px solid #a5d6a7;
+  border-radius: 5px;
   cursor: pointer;
 }
 
@@ -199,15 +200,25 @@
     gap: 0.75rem;
     margin-top: 1rem;
 }
-
+.primary-btn-1 {
+border: none;
+padding: 0.95rem 1rem;
+border-radius: 14px;
+font-size: 1rem;
+font-weight: 600;
+color: white;
+background: #3b82f6;
+cursor: pointer;
+transition: transform 160ms ease, box-shadow 160ms ease;
+}
 .cancel-btn {
 border: none;
 padding: 0.95rem 1rem;
 border-radius: 14px;
 font-size: 1rem;
 font-weight: 600;
-color: #1b120c;
-background: linear-gradient(135deg, rgb(218, 158, 158), rgb(200, 45, 45));
+color: white;
+background: #E60023;
 cursor: pointer;
 transition: transform 160ms ease, box-shadow 160ms ease;
 }
