@@ -51,6 +51,7 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IFormLayoutService, FormLayoutService>();
+builder.Services.AddHttpClient<IAIClassBuilderService, AIClassBuilderService>();
 
 builder.Services.AddAuthentication("Fake")
     .AddScheme<AuthenticationSchemeOptions, FakeAuthHandler>("Fake", _ => { });

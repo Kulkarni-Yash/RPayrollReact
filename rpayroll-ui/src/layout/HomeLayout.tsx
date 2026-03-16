@@ -7,6 +7,7 @@ import FormBuilderPage from '../pages/FormBuilderPage'
 import DynamicFormPage from '../pages/DynamicFormPage'
 import MenuManagementPage from '../pages/MenuManagementPage'
 import ProfilePage from '../pages/ProfilePage'
+import AIClassBuilderPage from '../pages/AIClassBuilderPage'
 import { apiFetch } from '../lib/api'
 import './HomeLayout.css'
 
@@ -89,6 +90,9 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
     if (activePage === 'form-builder') {
       return 'Form Builder'
     }
+    if (activePage === 'ai-class-builder') {
+      return 'AI Class Builder'
+    }
     const match = menuItems.find((item) => item.key === activePage)
     return match?.label ?? 'Dashboard'
   }, [activePage, menuItems])
@@ -106,10 +110,11 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
 
   const canViewProfile = role.toLowerCase() === 'employee'
   const canViewFormBuilder = role.toLowerCase() === 'admin'
+  const canViewAiClassBuilder = role.toLowerCase() === 'admin'
   const canViewMenus = role.toLowerCase() === 'admin'
 
   useEffect(() => {
-    if (activePage === 'profile' || activePage === 'form-builder' || activePage === 'menus') {
+    if (activePage === 'profile' || activePage === 'form-builder' || activePage === 'ai-class-builder' || activePage === 'menus') {
       return
     }
     if (!visibleMenu.some((item) => item.key === activePage)) {
@@ -134,8 +139,10 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
           setFormBuilderEditTarget(null)
           setActivePage('form-builder')
         }}
+        onAiClassBuilder={() => setActivePage('ai-class-builder')}
         showProfile={canViewProfile}
         showFormBuilder={canViewFormBuilder}
+        showAiClassBuilder={canViewAiClassBuilder}
       />
 
       <div className="app-body">
@@ -242,6 +249,10 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
             />
           )}
 
+          {activePage === 'ai-class-builder' && canViewAiClassBuilder && (
+            <AIClassBuilderPage username={username} token={token} />
+          )}
+
           {activePage === 'menus' && canViewMenus && (
             <MenuManagementPage
               token={token}
@@ -262,6 +273,7 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
             activePage !== 'employee' &&
             activePage !== 'attendance' &&
             activePage !== 'form-builder' &&
+            activePage !== 'ai-class-builder' &&
             activePage !== 'menus' &&
             activePage !== 'profile' && (
             <DynamicFormPage token={token} menuKey={activePage} />
