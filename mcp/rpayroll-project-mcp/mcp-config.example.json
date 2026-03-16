@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "rpayroll-project": {
+      "command": "node",
+      "args": [
+        "/Users/Yash/Dev/RPayrollReact/mcp/rpayroll-project-mcp/server.mjs"
+      ],
+      "env": {
+        "RPAYROLL_MCP_ROOT": "/Users/Yash/Dev/RPayrollReact",
+        "RPAYROLL_MCP_AUDIT_LOG": "/Users/Yash/Dev/RPayrollReact/docs/ollama-change-log.json"
+      }
+    }
+  }
+}

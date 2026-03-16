@@ -1,0 +1,57 @@
+RPayroll MCP Setup
+==================
+
+Purpose
+-------
+This document explains the MCP scaffold added to the repository.
+
+Location
+--------
+- /Users/Yash/Dev/RPayrollReact/mcp/rpayroll-project-mcp
+
+What It Provides
+----------------
+A local stdio MCP server with tools for:
+- project metadata
+- file listing
+- text search
+- file reading
+- file writing
+- text replacement
+- change audit logging
+
+What It Does Not Do Yet
+-----------------------
+- it does not make Ollama automatically use MCP
+- it does not replace the current AI Class Builder chat flow
+- it does not enforce approval rules by itself
+
+Why It Exists
+-------------
+This prepares the repository for a future MCP-capable host/orchestrator that can:
+1. give project tools to the model
+2. allow controlled edits
+3. append JSON audit entries after every code update
+
+Suggested Future Flow
+---------------------
+1. AI Class Builder sends a request to backend.
+2. Backend orchestrator decides whether to use MCP tools.
+3. MCP server reads or edits files inside the workspace.
+4. Audit log is appended to:
+   /Users/Yash/Dev/RPayrollReact/docs/ollama-change-log.json
+5. UI shows the change summary.
+
+Current Audit File
+------------------
+- /Users/Yash/Dev/RPayrollReact/docs/ollama-change-log.json
+
+Usage
+-----
+Start the MCP server manually:
+
+  cd /Users/Yash/Dev/RPayrollReact/mcp/rpayroll-project-mcp
+  node server.mjs
+
+Or use an MCP-aware host with the example config:
+- /Users/Yash/Dev/RPayrollReact/mcp/rpayroll-project-mcp/mcp-config.example.json
