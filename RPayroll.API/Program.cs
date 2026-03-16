@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using RPayroll.API.Security;
-using RPayroll.API.Services;
-using RPayroll.Domain.Interfaces.Services;
-using RPayroll.Infrastructure.Repositories.Implementations;
+using RPayroll.Infrastructure.Interfaces.Common;
+using RPayroll.Infrastructure.Interfaces.Services;
+using RPayroll.Repositories.Repositories.Implementations;
 using RPayroll.Infrastructure.Repositories.Interfaces;
-using RPayroll.Infrastructure.Security;
+using RPayroll.Repositories.Security;
+using RPayroll.Repositories.Services;
 using RPayroll.Infrastructure.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,8 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 builder.Services.AddScoped<IPayrollRepository, PayrollRepository>();
+builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
+builder.Services.AddScoped<IFormLayoutRepository, FormLayoutRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<FakeTokenGenerator>();
@@ -46,6 +49,8 @@ builder.Services.AddScoped<IPayrollService, PayrollService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IFormLayoutService, FormLayoutService>();
 
 builder.Services.AddAuthentication("Fake")
     .AddScheme<AuthenticationSchemeOptions, FakeAuthHandler>("Fake", _ => { });

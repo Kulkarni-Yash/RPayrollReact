@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RPayroll.API.Services;
-using RPayroll.Domain.DTOs.Auth;
-using RPayroll.Domain.Interfaces.Services;
+using RPayroll.API.DTOs.Auth;
+using RPayroll.API.Mappers;
+using RPayroll.Infrastructure.Interfaces.Common;
+using RPayroll.Infrastructure.Interfaces.Services;
+using RPayroll.Repositories.Services;
 
 namespace RPayroll.API.Controllers;
 
@@ -23,13 +25,13 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
     {
-        var result = await _authService.LoginAsync(request);
-        if (result == null)
+        var user = await _authService.LoginAsync(request.Username, request.Password);
+        if (user == null)
         {
             return Unauthorized();
         }
 
-        return Ok(result);
+        return Ok(user.ToLoginResponseDto());
     }
 
     [HttpPost("logout")]

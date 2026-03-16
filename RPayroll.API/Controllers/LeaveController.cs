@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RPayroll.Domain.DTOs.Leave;
-using RPayroll.Domain.Interfaces.Services;
+using RPayroll.API.DTOs.Leave;
+using RPayroll.API.Mappers;
+using RPayroll.Infrastructure.Interfaces.Services;
 
 namespace RPayroll.API.Controllers;
 
@@ -20,8 +21,8 @@ public class LeaveController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Apply([FromBody] LeaveRequestDto dto)
     {
-        var result = await _leaveService.ApplyLeaveAsync(dto);
-        return Ok(result);
+        var result = await _leaveService.ApplyLeaveAsync(dto.ToEntity());
+        return Ok(result.ToDto());
     }
 
     [HttpPut("{id:int}/approve")]
@@ -29,12 +30,7 @@ public class LeaveController : ControllerBase
     public async Task<IActionResult> Approve(int id)
     {
         var result = await _leaveService.ApproveLeaveAsync(id);
-        if (result == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(result);
+        return result == null ? NotFound() : Ok(result.ToDto());
     }
 
     [HttpPut("{id:int}/reject")]
@@ -42,33 +38,28 @@ public class LeaveController : ControllerBase
     public async Task<IActionResult> Reject(int id)
     {
         var result = await _leaveService.RejectLeaveAsync(id);
-        if (result == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(result);
+        return result == null ? NotFound() : Ok(result.ToDto());
     }
 
     [HttpGet("employee/{employeeId:int}")]
     public async Task<IActionResult> GetByEmployee(int employeeId)
     {
         var leaves = await _leaveService.GetLeavesByEmployeeAsync(employeeId);
-        return Ok(leaves);
+        return Ok(leaves.Select(x => x.ToDto()));
     }
 
     [HttpGet]
     public async Task<IActionResult> GetForCurrentUser()
     {
         var leaves = await _leaveService.GetLeavesForCurrentUserAsync();
-        return Ok(leaves);
+        return Ok(leaves.Select(x => x.ToDto()));
     }
 
     [HttpGet("my")]
     public async Task<IActionResult> GetMyLeaves()
     {
         var leaves = await _leaveService.GetMyLeavesAsync();
-        return Ok(leaves);
+        return Ok(leaves.Select(x => x.ToDto()));
     }
 
     [HttpDelete("{id:int}")]

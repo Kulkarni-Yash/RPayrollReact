@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RPayroll.Domain.DTOs.Employee;
-using RPayroll.Domain.Interfaces.Services;
+using RPayroll.API.DTOs.Employee;
+using RPayroll.API.Mappers;
+using RPayroll.Infrastructure.Interfaces.Services;
 
 namespace RPayroll.API.Controllers;
 
@@ -19,42 +20,37 @@ public class EmployeeController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin,HR,Manager")]
-    public async Task<IActionResult> Create([FromBody] CreateEmployeeDto dto)
+    public async Task<IActionResult> Create([FromBody] EmployeeDto dto)
     {
-        var employee = await _employeeService.CreateEmployeeAsync(dto);
-        return Ok(employee);
+        var employee = await _employeeService.CreateEmployeeAsync(
+            dto.ToEntity(),
+            dto.CreateLogin,
+            dto.Username,
+            dto.Password,
+            dto.RoleName);
+        return Ok(employee.ToDto());
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllForCurrentUser()
     {
         var employees = await _employeeService.GetEmployeesForCurrentUserAsync();
-        return Ok(employees);
+        return Ok(employees.Select(x => x.ToDto()));
     }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
         var employee = await _employeeService.GetEmployeeByIdAsync(id);
-        if (employee == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(employee);
+        return employee == null ? NotFound() : Ok(employee.ToDto());
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateEmployeeDto dto)
+    public async Task<IActionResult> Update(int id, [FromBody] EmployeeDto dto)
     {
         dto.Id = id;
-        var employee = await _employeeService.UpdateEmployeeAsync(dto);
-        if (employee == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(employee);
+        var employee = await _employeeService.UpdateEmployeeAsync(dto.ToEntity());
+        return employee == null ? NotFound() : Ok(employee.ToDto());
     }
 
     [HttpDelete("{id:int}")]
@@ -68,20 +64,16 @@ public class EmployeeController : ControllerBase
     [HttpPost("{id:int}/contacts")]
     public async Task<IActionResult> AddContact(int id, [FromBody] EmployeeContactPersonDto dto)
     {
-        var contact = await _employeeService.AddContactPersonAsync(id, dto);
-        return Ok(contact);
+        var contact = await _employeeService.AddContactPersonAsync(id, dto.ToEntity());
+        return Ok(contact.ToDto(id));
     }
 
     [HttpPut("{id:int}/contacts/{contactId:int}")]
     public async Task<IActionResult> UpdateContact(int id, int contactId, [FromBody] EmployeeContactPersonDto dto)
     {
         dto.Id = contactId;
-        var contact = await _employeeService.UpdateContactPersonAsync(id, dto);
-        if (contact == null)
-        {
-            return NotFound();
-        }
-        return Ok(contact);
+        var contact = await _employeeService.UpdateContactPersonAsync(id, dto.ToEntity());
+        return contact == null ? NotFound() : Ok(contact.ToDto(id));
     }
 
     [HttpDelete("{id:int}/contacts/{contactId:int}")]
@@ -95,28 +87,20 @@ public class EmployeeController : ControllerBase
     public async Task<IActionResult> Search([FromQuery] string query)
     {
         var results = await _employeeService.SearchEmployeesAsync(query ?? string.Empty);
-        return Ok(results);
+        return Ok(results.Select(x => x.ToSearchDto()));
     }
 
     [HttpGet("me")]
     public async Task<IActionResult> GetMyProfile()
     {
         var profile = await _employeeService.GetMyProfileAsync();
-        if (profile == null)
-        {
-            return NotFound();
-        }
-        return Ok(profile);
+        return profile == null ? NotFound() : Ok(profile.ToDto());
     }
 
     [HttpPut("me")]
-    public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateEmployeeProfileDto dto)
+    public async Task<IActionResult> UpdateMyProfile([FromBody] EmployeeDto dto)
     {
-        var profile = await _employeeService.UpdateMyProfileAsync(dto);
-        if (profile == null)
-        {
-            return NotFound();
-        }
-        return Ok(profile);
+        var profile = await _employeeService.UpdateMyProfileAsync(dto.ToEntity());
+        return profile == null ? NotFound() : Ok(profile.ToDto());
     }
 }

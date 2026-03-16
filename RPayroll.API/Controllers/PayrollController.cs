@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RPayroll.API.Mappers;
 using RPayroll.API.Models;
-using RPayroll.Domain.Interfaces.Services;
+using RPayroll.Infrastructure.Interfaces.Services;
 
 namespace RPayroll.API.Controllers;
 
@@ -20,25 +21,22 @@ public class PayrollController : ControllerBase
     [HttpPost("generate")]
     public async Task<IActionResult> Generate([FromBody] GeneratePayrollRequest request)
     {
-        var payroll = await _payrollService.GeneratePayrollAsync(
-            request.EmployeeId,
-            request.PeriodStart,
-            request.PeriodEnd);
-        return Ok(payroll);
+        var payroll = await _payrollService.GeneratePayrollAsync(request.EmployeeId, request.PeriodStart, request.PeriodEnd);
+        return Ok(payroll.ToDto());
     }
 
     [HttpGet("employee/{employeeId:int}")]
     public async Task<IActionResult> GetByEmployee(int employeeId)
     {
         var payrolls = await _payrollService.GetPayrollsByEmployeeAsync(employeeId);
-        return Ok(payrolls);
+        return Ok(payrolls.Select(x => x.ToDto()));
     }
 
     [HttpGet]
     public async Task<IActionResult> GetForCurrentUser()
     {
         var payrolls = await _payrollService.GetPayrollsForCurrentUserAsync();
-        return Ok(payrolls);
+        return Ok(payrolls.Select(x => x.ToDto()));
     }
 
     [HttpDelete("{id:int}")]

@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RPayroll.Domain\RPayroll.Domain.csproj" />
     <ProjectReference Include="..\RPayroll.Infrastructure\RPayroll.Infrastructure.csproj" />
+    <ProjectReference Include="..\RPayroll.Repositories\RPayroll.Repositories.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,9 @@ import Header from '../components/Header'
 import DashboardPage from '../pages/DashboardPage'
 import EmployeePage from '../pages/EmployeePage'
 import AttendancePage from '../pages/AttendancePage'
+import FormBuilderPage from '../pages/FormBuilderPage'
+import DynamicFormPage from '../pages/DynamicFormPage'
+import MenuManagementPage from '../pages/MenuManagementPage'
 import ProfilePage from '../pages/ProfilePage'
 import { apiFetch } from '../lib/api'
 import './HomeLayout.css'
@@ -25,13 +28,19 @@ const fallbackMenu: MenuItem[] = [
 ]
 
 export default function HomeLayout({ token, username, role, onLogout }: HomeLayoutProps) {
-
   const [menuItems, setMenuItems] = useState<MenuItem[]>(fallbackMenu)
   const [activePage, setActivePage] = useState<string>(fallbackMenu[0].key)
+  const [menuRefreshToken, setMenuRefreshToken] = useState(0)
+  const [formBuilderEditTarget, setFormBuilderEditTarget] = useState<string | null>(null)
 
   /* NEW STATE */
   const [employeeView, setEmployeeView] = useState<'list' | 'create'>('list')
   const [attendanceView, setAttendanceView] = useState<'monthly' | 'mark'>('monthly')
+  const [formBuilderView, setFormBuilderView] = useState<'create' | 'view'>('create')
+
+  const refreshMenuItems = () => {
+    setMenuRefreshToken((current) => current + 1)
+  }
 
   useEffect(() => {
     let isActive = true
@@ -65,7 +74,7 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
     return () => {
       isActive = false
     }
-  }, [token])
+  }, [token, menuRefreshToken])
 
   const pageTitle = useMemo(() => {
     if (activePage === 'profile') {
@@ -74,21 +83,33 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
     if (activePage === 'attendance') {
       return 'Attendance'
     }
+    if (activePage === 'menus') {
+      return 'Menu Items'
+    }
+    if (activePage === 'form-builder') {
+      return 'Form Builder'
+    }
     const match = menuItems.find((item) => item.key === activePage)
     return match?.label ?? 'Dashboard'
   }, [activePage, menuItems])
 
   const visibleMenu = useMemo(() => {
-    if (role.toLowerCase() === 'employee') {
-      return menuItems.filter((item) => item.key !== 'employee')
+    const baseItems = role.toLowerCase() === 'employee'
+      ? menuItems.filter((item) => item.key !== 'employee')
+      : menuItems
+
+    if (role.toLowerCase() === 'admin' && !baseItems.some((item) => item.key === 'menus')) {
+      return [...baseItems, { key: 'menus', label: 'Menus' }]
     }
-    return menuItems
+    return baseItems
   }, [menuItems, role])
 
   const canViewProfile = role.toLowerCase() === 'employee'
+  const canViewFormBuilder = role.toLowerCase() === 'admin'
+  const canViewMenus = role.toLowerCase() === 'admin'
 
   useEffect(() => {
-    if (activePage === 'profile') {
+    if (activePage === 'profile' || activePage === 'form-builder' || activePage === 'menus') {
       return
     }
     if (!visibleMenu.some((item) => item.key === activePage)) {
@@ -102,11 +123,19 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
       <Header
         activePage={activePage}
         menuItems={visibleMenu}
-        onNavigate={setActivePage}
+        onNavigate={(page) => {
+          setFormBuilderEditTarget(null)
+          setActivePage(page)
+        }}
         username={username}
         onLogout={onLogout}
         onProfile={() => setActivePage('profile')}
+        onFormBuilder={() => {
+          setFormBuilderEditTarget(null)
+          setActivePage('form-builder')
+        }}
         showProfile={canViewProfile}
+        showFormBuilder={canViewFormBuilder}
       />
 
       <div className="app-body">
@@ -161,6 +190,26 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
             </div>
           )}
 
+          {activePage === 'form-builder' && (
+            <div className="title-actions">
+              <button
+                className={formBuilderView === 'create' ? 'active' : ''}
+                onClick={() => setFormBuilderView('create')}
+              >
+                <span className="action-icon">+</span>
+                <span className="action-text">Create</span>
+              </button>
+
+              <button
+                className={formBuilderView === 'view' ? 'active' : ''}
+                onClick={() => setFormBuilderView('view')}
+              >
+                <span className="action-icon">☰</span>
+                <span className="action-text">View</span>
+              </button>
+            </div>
+          )}
+
         </div>
 
         {/* CONTENT CARD */}
@@ -184,6 +233,27 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
             />
           )}
 
+          {activePage === 'form-builder' && (
+            <FormBuilderPage
+              view={formBuilderView}
+              token={token}
+              editLayoutKey={formBuilderEditTarget}
+              onMenusChanged={refreshMenuItems}
+            />
+          )}
+
+          {activePage === 'menus' && canViewMenus && (
+            <MenuManagementPage
+              token={token}
+              onMenusChanged={refreshMenuItems}
+              onEditForm={(layoutKey) => {
+                setFormBuilderEditTarget(layoutKey)
+                setFormBuilderView('create')
+                setActivePage('form-builder')
+              }}
+            />
+          )}
+
           {activePage === 'profile' && canViewProfile && (
             <ProfilePage token={token} />
           )}
@@ -191,8 +261,10 @@ export default function HomeLayout({ token, username, role, onLogout }: HomeLayo
           {activePage !== 'dashboard' &&
             activePage !== 'employee' &&
             activePage !== 'attendance' &&
+            activePage !== 'form-builder' &&
+            activePage !== 'menus' &&
             activePage !== 'profile' && (
-            <div>Page coming soon.</div>
+            <DynamicFormPage token={token} menuKey={activePage} />
           )}
 
         </div>

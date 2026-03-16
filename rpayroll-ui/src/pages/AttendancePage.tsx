@@ -46,8 +46,8 @@ export default function AttendancePage({ token, view }: AttendancePageProps) {
   const autoStopRef = useRef<number | null>(null)
 
   const today = useMemo(() => new Date(), [])
-  const [month, setMonth] = useState(today.getMonth())
-  const [year, setYear] = useState(today.getFullYear())
+  const month = today.getMonth()
+  const year = today.getFullYear()
 
   const showNotification = (message: string, type: 'success' | 'error') => {
     if (hideTimerRef.current) window.clearTimeout(hideTimerRef.current)

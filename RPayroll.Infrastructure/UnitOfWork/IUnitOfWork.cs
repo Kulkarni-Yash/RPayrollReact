@@ -10,6 +10,8 @@ public interface IUnitOfWork
     ILeaveRepository Leaves { get; }
     IAttendanceRepository Attendances { get; }
     IPayrollRepository Payrolls { get; }
+    IMenuItemRepository MenuItems { get; }
+    IFormLayoutRepository FormLayouts { get; }
 
     Task SaveChangesAsync();
     Task BeginTransactionAsync();

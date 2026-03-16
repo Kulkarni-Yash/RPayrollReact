@@ -1,0 +1,138 @@
+.entity-list {
+  width: 100%;
+}
+
+.entity-list__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.entity-list__title {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.entity-list__controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.entity-list__search,
+.entity-list__sort {
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #dcdfe4;
+  border-radius: 8px;
+  background: white;
+}
+
+.entity-list__table-wrap {
+  overflow-x: auto;
+}
+
+.entity-list__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  background: white;
+}
+
+.entity-list__table thead {
+  background: #f7f8fa;
+}
+
+.entity-list__table th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #4b5563;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.entity-list__table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #f0f1f3;
+  color: #374151;
+}
+
+.entity-list__table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.entity-list__state {
+  padding: 1rem 0;
+  color: #6b7280;
+}
+
+.entity-list__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.entity-list__pagination button {
+  border: 1px solid #dcdfe4;
+  background: white;
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+}
+
+.entity-list__pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status-inactive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  background: #fff1f0;
+  color: #c0392b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.activate-btn,
+.deactivate-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.activate-btn {
+  background: #e9f7ef;
+  color: #1e7b43;
+}
+
+.deactivate-btn {
+  background: #fff1f0;
+  color: #b83227;
+}
+
+.activate-btn:disabled,
+.deactivate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .entity-list__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .entity-list__controls {
+    flex-direction: column;
+  }
+}

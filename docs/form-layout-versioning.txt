@@ -1,0 +1,116 @@
+RPayroll Dynamic Form Layout Versioning
+======================================
+
+Purpose
+-------
+This file defines how generated forms should be versioned so the system can
+support drafts, published forms, and safe editing without losing live forms.
+
+Goals
+-----
+1. Editing an active form must not accidentally break the live menu form.
+2. Admins must be able to overwrite the current form or save a new draft.
+3. Each saved layout must have a stable identity.
+4. Published runtime rendering must always resolve to a single layout version.
+
+Core Terms
+----------
+- Layout Key:
+  Stable unique key for a specific saved form layout record.
+
+- Menu Key:
+  Stable unique key for the menu item that can render a generated form.
+
+- Update Existing:
+  Save changes directly into the current layout record and keep the same menu key.
+
+- Save As Draft:
+  Create a new layout record and a new inactive generated menu item.
+
+- Published Form:
+  The layout currently reachable from an active menu item.
+
+- Draft Form:
+  A saved layout that is not visible in the main menu yet.
+
+Versioning Rules
+----------------
+1. Every generated form layout must have its own layout key.
+2. A generated menu item must point to exactly one layout key.
+3. Update Existing:
+   - keeps the same layout key
+   - keeps the same menu key
+   - keeps the same submit URL and submit method
+   - updates layout JSON, tabs, labels, and presentation settings only
+4. Save As Draft:
+   - creates a new layout key
+   - creates a new menu key
+   - creates a new inactive menu item
+   - does not modify the currently active menu item
+5. System menus are not versioned through the builder.
+
+Locked Contract Rules During Edit
+---------------------------------
+When editing an existing generated form, these values are locked:
+- model/entity key
+- submit URL
+- submit method
+
+These values may change:
+- form display name
+- tab names and tab order
+- tab grid sizes
+- control placement
+- control width
+- labels
+- placeholders
+- default values
+- required flags
+- field bindings
+
+Recommended Future Fields
+-------------------------
+When persistence moves beyond the current in-memory implementation, store:
+- LayoutKey
+- ParentLayoutKey (nullable, for draft lineage)
+- MenuKey
+- VersionNumber
+- IsDraft
+- IsPublished
+- PublishedFromLayoutKey (nullable)
+- Name
+- ModelKey
+- SubmitUrl
+- SubmitMethod
+- LayoutJson
+- CreatedBy
+- CreatedDate
+- UpdatedBy
+- UpdatedDate
+
+Recommended Publish Model
+-------------------------
+For the current workflow:
+- active menu item = published form
+- inactive menu item = draft form candidate
+
+For a stronger future model:
+- one logical form can own many versions
+- only one version is published
+- drafts remain editable without changing runtime behavior
+
+Safety Expectations
+-------------------
+1. Runtime rendering must only use the published menu target.
+2. Draft save must never silently replace an active form.
+3. Overwrite must not mutate model/API contract details.
+4. Old single-layout forms should continue loading as one-tab forms.
+
+Current Implementation Intent
+-----------------------------
+The current codebase should treat versioning as:
+- simple branch model
+- overwrite existing OR save as separate draft
+- no hidden automatic revisions
+
+That keeps admin behavior explicit and predictable.

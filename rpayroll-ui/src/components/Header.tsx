@@ -13,7 +13,9 @@ type HeaderProps = {
   username: string
   onLogout: () => void
   onProfile: () => void
+  onFormBuilder: () => void
   showProfile: boolean
+  showFormBuilder: boolean
 }
 
 export default function Header({
@@ -23,7 +25,9 @@ export default function Header({
   username,
   onLogout,
   onProfile,
+  onFormBuilder,
   showProfile,
+  showFormBuilder,
 }: HeaderProps) {
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [navOpen, setNavOpen] = useState(false)
@@ -86,6 +90,17 @@ export default function Header({
             <button type="button" onClick={onLogout}>
               Log out
             </button>
+            {showFormBuilder && (
+              <button
+                type="button"
+                onClick={() => {
+                  onFormBuilder()
+                  setUserMenuOpen(false)
+                }}
+              >
+                Form Builder
+              </button>
+            )}
           </div>
         )}
       </div>

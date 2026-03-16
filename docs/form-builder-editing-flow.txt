@@ -1,0 +1,77 @@
+RPayroll Form Builder Editing Flow
+==================================
+
+Purpose
+-------
+This file describes the expected editing flow for generated forms in the UI.
+
+Entry Points
+------------
+1. Menus page:
+   - admin clicks "Edit Form" on a generated form row
+   - builder opens that exact saved layout
+
+2. Form Builder page:
+   - admin selects a model
+   - if a form already exists for that model, builder may preload it
+   - explicit menu-driven edit is the preferred path for exact edits
+
+Builder Modes
+-------------
+1. New Form Mode
+   - entity/model can be selected
+   - submit URL/method come from model metadata
+   - save should create a new form layout
+
+2. Edit Existing Mode
+   - entity/model selector is locked
+   - builder shows current form name
+   - save mode selector is visible
+   - admin chooses:
+     - Update Existing
+     - Save As Draft
+
+Save Behavior
+-------------
+Update Existing:
+- update current layout in place
+- same menu item remains connected
+- if the menu is active, runtime form updates after refresh
+
+Save As Draft:
+- create a separate generated form layout
+- create a separate inactive menu item
+- original form/menu remains unchanged
+
+Tabs
+----
+- tabs are part of the saved layout definition
+- each tab has:
+  - tab name
+  - grid size
+  - controls
+- editing should preserve:
+  - tab order
+  - duplicated tabs
+  - removed tabs
+  - per-tab grid size
+
+Validation
+----------
+- required-variable validation is checked across all tabs
+- duplicate variable binding across tabs should be prevented unless
+  intentionally supported by future design
+
+Preview Expectations
+--------------------
+- switching between Create and View should not lose unsaved builder state
+- preview supports desktop and mobile view
+- preview should mirror rendered form structure as closely as possible
+
+Future Improvements
+-------------------
+1. Add explicit "Published" vs "Draft" badges in Menus.
+2. Add lineage display:
+   - which draft came from which layout
+3. Add compare view between current and draft versions.
+4. Add optimistic concurrency/version number to prevent silent overwrite.
