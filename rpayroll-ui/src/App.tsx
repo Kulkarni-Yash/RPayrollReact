@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import type { CSSProperties, FormEvent } from 'react'
 import HomePage from './components/HomePage'
 import { apiFetch, readErrorMessage } from './lib/api'

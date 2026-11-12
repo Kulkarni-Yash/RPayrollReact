@@ -22,6 +22,7 @@ type MenuItem = {
 const fallbackMenu: MenuItem[] = [
   { key: 'dashboard', label: 'Dashboard' },
   { key: 'employee', label: 'Employee' },
+  { key: 'attendance', label: 'Attendance' },
 ]
 
 export default function HomeLayout({ token, username, role, onLogout }: HomeLayoutProps) {

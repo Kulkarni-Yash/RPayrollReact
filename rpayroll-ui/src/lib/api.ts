@@ -18,7 +18,18 @@ export async function apiFetch(
     headers.set('ngrok-skip-browser-warning', 'true')
   }
 
-  return fetch(url, { ...options, headers })
+  const response = await fetch(url, { ...options, headers })
+
+  if (response.status === 401 && normalizedPath !== '/api/auth/login') {
+    try {
+      localStorage.removeItem('rpayroll_user')
+    } catch {
+      // ignore storage errors
+    }
+    window.location.reload()
+  }
+
+  return response
 }
 
 export async function readErrorMessage(response: Response): Promise<string> {

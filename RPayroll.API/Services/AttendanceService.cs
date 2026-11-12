@@ -23,9 +23,9 @@ public class AttendanceService : IAttendanceService
         ValidateTimes(dto.CheckInTime, dto.CheckOutTime);
 
         var today = DateTime.Today;
-        var isEmployee = IsEmployee();
+        var isSelfService = IsEmployee() || IsManager();
 
-        if (isEmployee)
+        if (isSelfService)
         {
             if (!_currentUser.EmployeeId.HasValue)
             {
@@ -35,18 +35,13 @@ public class AttendanceService : IAttendanceService
             dto.EmployeeId = _currentUser.EmployeeId.Value;
             if (dto.Date.Date != today)
             {
-                throw new InvalidOperationException("Employees can only mark attendance for today.");
+                throw new InvalidOperationException("You can only mark attendance for today.");
             }
         }
 
-        if (!isEmployee && !IsAdmin() && !IsHr())
+        if (!isSelfService && !IsAdmin() && !IsHr())
         {
-            throw new UnauthorizedAccessException("Admin/HR required to mark attendance.");
-        }
-
-        if (isEmployee && (dto.Date.Date < today || dto.Date.Date > today))
-        {
-            throw new InvalidOperationException("Invalid attendance date.");
+            throw new UnauthorizedAccessException("You are not allowed to mark attendance.");
         }
 
         var existing = await _unitOfWork.Attendances.GetByDateRangeAsync(dto.EmployeeId, dto.Date.Date, dto.Date.Date);
@@ -74,13 +69,23 @@ public class AttendanceService : IAttendanceService
     public async Task<AttendanceDto?> UpdateAttendanceAsync(UpdateAttendanceDto dto)
     {
         EnsureAuthenticated();
-        EnsureAdminOrHr();
         ValidateTimes(dto.CheckInTime, dto.CheckOutTime);
 
         var attendance = await _unitOfWork.Attendances.GetByIdAsync(dto.AttendanceId);
         if (attendance == null)
         {
             return null;
+        }
+
+        if (!CanModifyAttendance(attendance))
+        {
+            throw new UnauthorizedAccessException("Not allowed to update attendance.");
+        }
+
+        if (!IsAdmin() && !IsHr())
+        {
+            dto.EmployeeId = attendance.EmployeeId;
+            dto.Date = attendance.Date;
         }
 
         attendance.EmployeeId = dto.EmployeeId;
@@ -165,6 +170,17 @@ public class AttendanceService : IAttendanceService
             CheckOutTime = attendance.CheckOutTime,
             Status = attendance.Status
         };
+    }
+
+    private bool CanModifyAttendance(Attendance attendance)
+    {
+        if (IsAdmin() || IsHr())
+        {
+            return true;
+        }
+
+        return _currentUser.EmployeeId.HasValue
+            && attendance.EmployeeId == _currentUser.EmployeeId.Value;
     }
 
     private async Task<bool> CanViewEmployeeAsync(int employeeId)

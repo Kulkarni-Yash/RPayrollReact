@@ -222,7 +222,7 @@ function EmployeeList({
 
   const [search, setSearch] = useState("")
   const [sortField, setSortField] = useState<keyof Employee>("firstName")
-  const [page, setPage] = useState(1)
+  const [page] = useState(1)
 
   const pageSize = 5
 
@@ -244,8 +244,6 @@ function EmployeeList({
     (page - 1) * pageSize,
     page * pageSize
   )
-
-  const totalPages = Math.ceil(filteredEmployees.length / pageSize)
 
   return (
     <div className="employee-list">

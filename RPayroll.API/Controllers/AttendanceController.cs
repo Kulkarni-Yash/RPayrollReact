@@ -20,16 +20,38 @@ public class AttendanceController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateAttendanceDto dto)
     {
-        var result = await _attendanceService.CreateAttendanceAsync(dto);
-        return Ok(result);
+        try
+        {
+            var result = await _attendanceService.CreateAttendanceAsync(dto);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
     }
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateAttendanceDto dto)
     {
         dto.AttendanceId = id;
-        var result = await _attendanceService.UpdateAttendanceAsync(dto);
-        return result == null ? NotFound() : Ok(result);
+        try
+        {
+            var result = await _attendanceService.UpdateAttendanceAsync(dto);
+            return result == null ? NotFound() : Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
     }
 
     [HttpGet("employee/{employeeId:int}")]
